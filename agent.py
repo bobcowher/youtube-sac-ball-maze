@@ -54,9 +54,9 @@ class Agent(object):
 
         state_batch = torch.FloatTensor(state_batch).to(self.device)
         action_batch = torch.FloatTensor(action_batch).to(self.device)
-        reward_batch = torch.FloatTensor(reward_batch).to(self.device)
+        reward_batch = torch.FloatTensor(reward_batch).to(self.device).unsqueeze(1)
         next_state_batch = torch.FloatTensor(next_state_batch).to(self.device)
-        mask_batch = torch.FloatTensor(mask_batch).to(self.device)
+        mask_batch = torch.FloatTensor(mask_batch).to(self.device).unsqueeze(1)
 
         # Predictive model here. 
         # TODO: Add a predictive model. 
@@ -151,6 +151,32 @@ class Agent(object):
 
             if i_episode % 10 == 0:
                 self.save_checkpoint()
+
+    def test(self, env, episodes=10, max_episode_steps=500):
+
+        for i_episode in range(episodes):
+            episode_reward = 0
+            episode_steps = 0
+            done = False
+            state, _ = env.reset()
+
+            while not done and episode_steps < max_episode_steps:
+                action = self.select_action(state)
+
+                next_state, reward, done, _, _ = env.step(action)
+
+                episode_steps += 1
+
+                if reward == 1:
+                    done = True
+                
+                episode_reward += reward
+
+                state = next_state
+            
+            print(f"Episode: {i_episode}, Episode steps: {episode_steps}, Reward: {episode_reward}")
+
+                
 
 
 

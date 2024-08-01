@@ -18,14 +18,33 @@ if __name__ == '__main__':
     hidden_size = 512
     learning_rate = 0.0001
     env_name = "PointMaze_UMaze-v3"
-    max_episode_steps = 100
+    max_episode_steps = 500
     exploration_scaling_factor=1.5
 
-    STRAIGHT_MAZE = [[1, 1, 1, 1, 1],
-                     [1, 0, 0, 0, 1],
-                     [1, 1, 1, 1, 1]]
+    LARGE_MAZE = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+                    [1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+                    [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+    
+    NEW_LARGE_MAZE = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+]
 
-    env = gym.make(env_name, max_episode_steps=max_episode_steps, render_mode='human', maze_map=STRAIGHT_MAZE)
+    env = gym.make(env_name, max_episode_steps=max_episode_steps, render_mode='human', maze_map=NEW_LARGE_MAZE)
     env = RoboGymObservationWrapper(env)
 
     observation, info = env.reset()
@@ -39,6 +58,6 @@ if __name__ == '__main__':
     
     agent.load_checkpoint(evaluate=True)
 
-    agent.test(env=env, episodes=10, max_episode_steps=200)
+    agent.test(env=env, episodes=10, max_episode_steps=max_episode_steps)
 
     env.close()
